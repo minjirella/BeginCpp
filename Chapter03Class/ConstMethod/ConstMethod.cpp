@@ -1,4 +1,4 @@
-// Chapter03Class.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// ConstMethod.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include "pch.h"
@@ -8,25 +8,22 @@ using namespace std;
 class CTest
 {
 public:
-	//CTest 클래스의 생성자 함수 선언 및 정의
-	CTest()
+	CTest(int nParam) : m_nData(nParam) {};
+	~CTest() {};
+
+	int GetData() const
 	{
-		//인스턴스가 생성되면 멤버 데이터를 자동으로 초기화한다.
-		m_nData = 10;
+		return m_nData;
 	}
 
-	int m_nData;
+	int SetData(int nParam) { m_nData = nParam; }
 
-	//멤버함수 선언 및 정의
-	void PrintData(void)
-	{
-		cout << m_nData << endl;
-	}
+private: int m_nData = 0;
 };
 int main()
 {
-	CTest t;
-	t.PrintData();
+	CTest a(10);
+	cout << a.GetData() << endl;
 
 	return 0;
 }

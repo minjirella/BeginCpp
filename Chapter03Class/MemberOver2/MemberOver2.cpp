@@ -1,32 +1,33 @@
-// Chapter03Class.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// MemberOver2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include "pch.h"
 #include <iostream>
 using namespace std;
 
-class CTest
+class CMyData
 {
 public:
-	//CTest 클래스의 생성자 함수 선언 및 정의
-	CTest()
-	{
-		//인스턴스가 생성되면 멤버 데이터를 자동으로 초기화한다.
-		m_nData = 10;
-	}
+	CMyData() : m_nData(0) {};
 
+	int GetData(void) { return m_nData; }
+	void SetData(int nParam) { m_nData = nParam; }
+
+	void SetData(double dParam) = delete;
+
+private:
 	int m_nData;
-
-	//멤버함수 선언 및 정의
-	void PrintData(void)
-	{
-		cout << m_nData << endl;
-	}
 };
+
 int main()
 {
-	CTest t;
-	t.PrintData();
+	CMyData a;
+	a.SetData(10);
+	cout << a.GetData() << endl;
+	
+	CMyData b;
+	b.SetData(5.5);
+	cout << b.GetData << endl;
 
 	return 0;
 }

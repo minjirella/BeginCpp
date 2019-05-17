@@ -35,16 +35,16 @@ int main()
 	CMyDataEx a;
 	a.PrintData();
 
-	CMyData& b = a;
-
+	CMyData b = a;
 	b.PrintData();
 
 	a.TestFunc();
 
+/*
 	int aList[5] = { 10,20,30,40,50 };
 	for (auto& i : aList)
 		cout << i << ' ';
 	cout << endl;
-
+*/
 	return 0;
 }

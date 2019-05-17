@@ -24,10 +24,15 @@ const string currentDateTime() {
 	return buf;
 }
 
-//-----파일 생성 LOG저장-----
+//-----파일 생성 LOG저장/출력 메소드-----
 // TODO : 하나의 메소드 생성/콘솔로 나오는 모든 로그를 파일로 export
-string fileName = currentDateTime() + ".log";
-ofstream outFile(fileName);
+ofstream outFile("./log/" + currentDateTime() + ".log");
+void printAndLogging(string data)
+{
+	cout << data << endl;
+	outFile << data << endl;
+}
+
 
 void __cdecl RecvThread (void * p)
 {
@@ -41,8 +46,8 @@ void __cdecl RecvThread (void * p)
 		if(recvsize <= 0)		break;
 		//------------------------------------------------
 		buf[recvsize] = '\0';
-		cout << buf << endl; //모니터 출력
-		outFile << buf << endl; // 파일로 대화로그 저장
+		printAndLogging(buf);
+
 		//----------클라이언트에게 전송------------------
 		for(int i = 0 ; i < clnt_list.size(); i++)
 		{
@@ -53,8 +58,8 @@ void __cdecl RecvThread (void * p)
 		}
 		//-----------------------------------------------
 	}
-	cout << "접속 종료\n" << endl;
-	outFile << "접속 종료\n" << endl;
+	
+	printAndLogging("접속 종료\n");
 	
 	//------------vector에 있는 데이터 지우기-----------
 	vector<SOCKET>::iterator iter = clnt_list.begin();
@@ -67,8 +72,7 @@ void __cdecl RecvThread (void * p)
 		}
 		iter++;
 	}
-	//---------------------------------------------------
-
+	
 	//------------소켓 해제---------------------
 	closesocket(sock);
 	//----------------------------------------
@@ -81,9 +85,7 @@ int main()
 	int retval = WSAStartup(MAKEWORD(2,2),&wsaData);
 	if(retval != 0)
 	{
-		printf("WSAStartup() Error\n");
-		outFile << "WSAStartup() Error\n" << endl;
-
+		printAndLogging("WSAStartup() Error\n");
 		return 0;
 	}
 	//-------------------------------------------
@@ -93,8 +95,7 @@ int main()
 	serv_sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(serv_sock == SOCKET_ERROR)
 	{
-		printf("socket() Error\n");
-		outFile << "socket() Error\n" << endl;
+		printAndLogging("socket() Error\n");
 		return 0;
 	}
 	//-----------------------------------
@@ -110,8 +111,7 @@ int main()
 	retval = bind(serv_sock,(SOCKADDR*)&serv_addr,sizeof(SOCKADDR));
 	if(retval == SOCKET_ERROR)
 	{
-		printf("bind() Error\n");
-		outFile << "bind() Error\n" << endl;
+		printAndLogging("bind() Error\n");
 		return 0;
 	}
 	//--------------------------------------------
@@ -128,8 +128,7 @@ int main()
 		SOCKET clnt_sock = accept(serv_sock,(SOCKADDR*)&clnt_addr,&size);
 		if(clnt_sock == SOCKET_ERROR)
 		{
-			printf("accept() Error\n");
-			outFile << "accept() Error\n" << endl;
+			printAndLogging("accept() Error\n");
 			continue;
 		}
 		//----------------------------------------------------------------------
@@ -138,11 +137,12 @@ int main()
 		clnt_list.push_back(clnt_sock);
 		//--------------------------------------------------
 
-		printf("클라이언트 접속\n");
-		outFile << "클라이언트 접속" << endl;
-
-		printf("IP : %s, Port : %d\n",inet_ntoa(clnt_addr.sin_addr),clnt_addr.sin_port);
-		outFile << "IP : "<< inet_ntoa(clnt_addr.sin_addr) << " Port : "<< clnt_addr.sin_port << endl;
+		printAndLogging("클라이언트 접속");
+		
+		string ConnectedIp = inet_ntoa(clnt_addr.sin_addr);
+		string ConnectedPort = to_string(clnt_addr.sin_port);
+		printAndLogging("접속정보\t" + ConnectedIp + ":" + ConnectedPort);
+			
 		//-----------수신 스레드 생성-------------
 		_beginthread(RecvThread,NULL,(void*)clnt_sock);
 	}

@@ -15,7 +15,7 @@ void __cdecl RecvThread (void * p)
 		int recvsize = recv(sock,buf,sizeof(buf),0);
 		if(recvsize <= 0)
 		{
-			printf("접속종료\n");
+			printf("서버가 종료되었습니다\n");
 			break;
 		}
 		//------------------------------------------------

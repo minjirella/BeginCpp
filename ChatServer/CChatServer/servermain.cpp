@@ -12,7 +12,7 @@
 using namespace std;
 
 vector<SOCKET> clnt_list;
-
+ 
 // 현재시간을 string type으로 return하는 함수
 const string currentDateTime() {
 	time_t     now = time(0); //현재 시간을 time_t 타입으로 저장
@@ -44,9 +44,10 @@ void __cdecl RecvThread (void * p)
 		//-----------클라이언트로부터 수신------------
 		int recvsize = recv(sock,buf,sizeof(buf),0);
 		if(recvsize <= 0)		break;
-		//------------------------------------------------
+		
 		buf[recvsize] = '\0';
 		printAndLogging(buf);
+		//------------------------------------------------
 
 		//----------클라이언트에게 전송------------------
 		for(int i = 0 ; i < clnt_list.size(); i++)
